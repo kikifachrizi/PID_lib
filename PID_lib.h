@@ -38,7 +38,7 @@ public:
     void pid_pwm(float target_, float kp_, float ki_, float kd_, float rpm, float t_);
     void pwm_read(float target_, float kp_, float ki_, float kd_, float rpm, float t_);
     void stop();
-    void manualPwm(int dir,float speed_);
+    void manualPwm(float speed_);
     float record_data(int dir_,float speed_,float freq, float t_r);
     void useParams1();
     void printParams();
