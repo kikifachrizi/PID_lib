@@ -35,11 +35,10 @@ public:
 
     PID_lib(PinName direksi1, PinName direksi2, PinName pulseWidth);
   
-    void pid_pwm(float target_, float kp_, float ki_, float kd_, float rpm, float t_);
-    void pwm_read(float target_, float kp_, float ki_, float kd_, float rpm, float t_);
+    void pid_speed(double target_, double kp_, double ki_, double kd_, double rps, double t_);
     void stop();
-    void manualPwm(float speed_);
-    float record_data(int dir_,float speed_,float freq, float t_r);
+    void manualPwm(double speed_);
+    double record_data(int dir_,double speed_,double freq, double t_r);
     void useParams1();
     void printParams();
 
@@ -48,29 +47,29 @@ private:
        DigitalOut dir1;
        DigitalOut dir2;
        PwmOut pwm;
-       float freq_rec;
-       float rpm_rec;
-       float rpm;
-       float freq;
-       float ppr;
-       float e;
-       float laste;
-       float eI;
-       float eD;
-       float dt;
-       float tim;
-       float lastime;
-       float pidPwm;
-       float pwmLebih;
-       float lastPid;
-       float hP;
-       float hI;
-       float hD;
-       float setI;
+       double freq_rec;
+       double rps_rec;
+       double rps;
+       double freq;
+       double ppr;
+       double e;
+       double laste;
+       double eI;
+       double eD;
+       double dt;
+       double tim;
+       double lastime;
+       double pidPwm;
+       double pwmLebih;
+       double lastPid;
+       double hP;
+       double hI;
+       double hD;
+       double setI;
        
-       float rpmFilt;
-       float rpmFiltn1;
-       float rpmn1;
+       double rpsFilt;
+       double rpsFiltn1;
+       double rpsn1;
 };
 
 #endif 
