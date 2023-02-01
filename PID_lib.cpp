@@ -13,16 +13,19 @@ PID_lib::PID_lib(PinName direksi1, PinName direksi2, PinName pulseWidth) : dir1(
 //    tr.reset();
 }
 
-void PID_lib::manualPwm(int dir ,float speed_){
-    if(dir == 1){
-      pwm.write(speed_);
+void PID_lib::manualPwm(float speed_){
+    if(speed_ < 0){
+    //   pwm.write(speed_);
       dir1 = 0;
       dir2 = 1; 
-    }else if(dir == 0){
-      pwm.write(speed_);
+    }else if(speed_ > 0){
+    //   pwm.write(speed_);
       dir1 = 1;
       dir2 = 0; 
     }
+    pwm.period(0.010);
+    pwm.write(abs(speed_));
+    // printf("%f;\t",pwm.read());
 }
 
 void PID_lib::stop(){
@@ -154,27 +157,27 @@ void PID_lib::pid_pwm(float target_, float kp_,float ki_,float kd_, float freq, 
 //  pc.printf("%f;%1lu\n",pidPwm,t1.read_high_resolution_us());
 }
 
-float PID_lib::record_data(int dir_,float speed_, float rpm_rec_, float t_r){
-      rpm_rec = rpm_rec_;
-    //   rpmFilt = 0.03046875*rpm_rec + 0.03046875*rpmn1 + 0.93906251*rpmFiltn1;//10 hz
-    //   rpmFilt = 0.04503501*rpm_rec + 0.04503501*rpmn1 + 0.90992999*rpmFiltn1;//15 hz
-//   rpmFilt = 0.0591907*rpm_rec + 0.0591907*rpmn1 + 0.88161859*rpmFiltn1;//20 hz
-      rpmFilt = 0.07295966*rpm_rec_ + 0.07295966*rpmn1 + 0.85408069*rpmFiltn1;//25 hz
-    //   rpmFilt = 0.09942446*rpm_rec + 0.09942446*rpmn1 + 0.80115107*rpmFiltn1;//35 hz
-    //   rpmFilt = 0.13672874*rpm_rec + 0.13672874*rpmn1 + 0.72654253*rpmFiltn1;//50 hz
+// float PID_lib::record_data(int dir_,float speed_, float rpm_rec_, float t_r){
+//       rpm_rec = rpm_rec_;
+//     //   rpmFilt = 0.03046875*rpm_rec + 0.03046875*rpmn1 + 0.93906251*rpmFiltn1;//10 hz
+//     //   rpmFilt = 0.04503501*rpm_rec + 0.04503501*rpmn1 + 0.90992999*rpmFiltn1;//15 hz
+// //   rpmFilt = 0.0591907*rpm_rec + 0.0591907*rpmn1 + 0.88161859*rpmFiltn1;//20 hz
+//       rpmFilt = 0.07295966*rpm_rec_ + 0.07295966*rpmn1 + 0.85408069*rpmFiltn1;//25 hz
+//     //   rpmFilt = 0.09942446*rpm_rec + 0.09942446*rpmn1 + 0.80115107*rpmFiltn1;//35 hz
+//     //   rpmFilt = 0.13672874*rpm_rec + 0.13672874*rpmn1 + 0.72654253*rpmFiltn1;//50 hz
       
-       if(dir_ == 1){
-         pwm = speed_;
-         dir1 = 0;
-         dir2 = 1;
-       }else if(dir_ == 0){
-         pwm = speed_;
-         dir1 = 1;
-         dir2 = 0;
-       }
+//        if(dir_ == 1){
+//          pwm = speed_;
+//          dir1 = 0;
+//          dir2 = 1;
+//        }else if(dir_ == 0){
+//          pwm = speed_;
+//          dir1 = 1;
+//          dir2 = 0;
+//        }
         
-    rpmn1 = rpm_rec;rpmFiltn1 = rpmFilt;
-    return rpmFilt;
-    //    printf("%f;%.2f;%llu\n",speed_,rpm_rec,t_r);
-}
+//     rpmn1 = rpm_rec;rpmFiltn1 = rpmFilt;
+//     return rpmFilt;
+//     //    printf("%f;%.2f;%llu\n",speed_,rpm_rec,t_r);
+// }
 
