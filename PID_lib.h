@@ -35,7 +35,7 @@ public:
 
     PID_lib(PinName direksi1, PinName direksi2, PinName pulseWidth);
   
-    void pid_speed(double target_, double kp_, double ki_, double kd_, double rps, double t_);
+    void pid_speed(double target_, double kp_, double ki_, double kd_, double rpm, double t_);
     void stop();
     void manualPwm(double speed_);
     double record_data(int dir_,double speed_,double freq, double t_r);
