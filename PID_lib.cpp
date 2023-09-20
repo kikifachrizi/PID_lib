@@ -6,7 +6,7 @@ PID_lib::PID_lib(PinName direksi1, PinName direksi2, PinName pulseWidth) : dir1(
     dir2 = 0;
     pwm = 0;
     
-    ppr = 3600.0f;
+    ppr = 270.0f;
     double phi = 3.14285714;
     
 //    t.start();
@@ -43,15 +43,15 @@ void PID_lib::stop(){
     dir2 = 0;
 }
 
-void PID_lib::pid_speed(double target_, double kp_,double ki_,double kd_, double rps, double t_){
+void PID_lib::pid_speed(double target_, double kp_,double ki_,double kd_, double rpm, double t_){
   tim = t_;
   dt = tim - lastime;
   
 //   rpm = freq/ppr*60;
-  rpsFilt = 0.03046875*rps + 0.03046875*rpsn1 + 0.93906251*rpsFiltn1;//10hz filter 
+//   rpsFilt = 0.03046875*rps + 0.03046875*rpsn1 + 0.93906251*rpsFiltn1;//10hz filter 
 
   //error computing start          
-  e = target_ - rps;
+  e = target_ - rpm;
   eI += e;
   eD = e - laste;
   //error computing end
@@ -104,7 +104,7 @@ void PID_lib::pid_speed(double target_, double kp_,double ki_,double kd_, double
   lastPid = pidPwm;
 //  printf("%f\n", rpmFilt);
 //    printf("%f;%f;%f\n",e,eI,eD);
-    printf("%f;%f\n", rps, rpsFilt);
+    printf("%f\n", rpm);
 //    printf("%f;%f;%f\n",hP,setI,hD);
 //  pc.printf("%f;%1lu\n",pidPwm,t1.read_high_resolution_us());
 }
