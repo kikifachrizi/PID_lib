@@ -1,4 +1,5 @@
 #include "PID_lib.h"
+#include <cstdio>
 
 
 PID_lib::PID_lib(PinName direksi1, PinName direksi2, PinName pulseWidth) : dir1(direksi1), dir2(direksi2), pwm(pulseWidth){    
@@ -8,9 +9,65 @@ PID_lib::PID_lib(PinName direksi1, PinName direksi2, PinName pulseWidth) : dir1(
     
     ppr = 270.0f;
     double phi = 3.14285714;
+
+    t_pid.reset();
+    t_pid.start();
+}
+
+void PID_lib::reset_timer(){
+    t_pid.reset();
+    t_pid.start();
+
+    printf("%llu\n", t_pid.read_high_resolution_us());
+}
+
+float PID_lib::compute(double target_, double kp_, double ki_, double kd_ , double sensor_){
+    tim = t_pid;
+    dt = tim - lastime;
+    //error computing start          
+    e = target_ - sensor_;
+    eI += e;
+    eD = e - laste;
+    //error computing end
+    //storing error value start
+    hI = eI*ki_*dt;
+    //storing error value end
+    //saturasi ki start
+    if(hI < 0.5 && hI > 0){
+        setI = hI;
+    }else if(hI > 0.5){
+        setI = 0.5;
+    }
+    else if(hI < 0 && hI > -0.5){
+        setI = hI;
+    }else if(hI < -0.5){
+        setI = -0.5;
+    }
+    //saturasi ki end
     
-//    t.start();
-//    tr.reset();
+    pid = e*kp_+setI+eD*kd_/dt;//pwm pid
+    lastime = tim;//update timer
+    laste = e;//update error
+
+    //pidSat saturasi start
+    if(pid > 0.5){
+        pidSat = 0.5;
+    }else if(pid < 0.5 && pid > 0){
+        pidSat = fabs(pid);
+    }else if(pid < -0.5){
+        pidSat = -0.5;
+    }else if(pid > -0.5 && pid < 0){
+        pidSat = fabs(pid);
+    }
+    //pidSat saturasi end
+    
+    // pid cek sample time
+    if(dt < 0.001){pid_out = fabs(lastPid);}
+    else{pid_out = fabs(pid);}
+
+    lastPid = pid;
+
+    return pid_out;
 }
 
 void PID_lib::manualPwm(double speed_){
@@ -41,6 +98,37 @@ void PID_lib::stop(){
     pwm = 0;
     dir1 = 0;
     dir2 = 0;
+}
+
+void PID_lib::pos(double target_, double kp_ , double ki_ , double kd_ , double angle_ , double t_){
+    errAngle = target_ - angle_;
+    while(errAngle > 10 || errAngle < -10){
+        pwm.period(0.010);
+        pwm = 0.5;
+        if(errAngle < 0){
+            dir1 = 0;
+            dir2 = 1;
+        }else{
+            dir1 = 1;
+            dir2 = 0;
+        }
+    }
+
+    while(errAngle > 5 || errAngle < -5){
+        pwm.period(0.010);
+        pwm = 0.2;
+        if(errAngle < 0){
+            dir1 = 0;
+            dir2 = 1;
+        }else{
+            dir1 = 1;
+            dir2 = 0;
+        }
+    }
+    while(errAngle > 1 || errAngle < -1){
+
+    }
+    stop();
 }
 
 void PID_lib::pid_speed(double target_, double kp_,double ki_,double kd_, double rpm, double t_){

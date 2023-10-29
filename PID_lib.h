@@ -41,9 +41,13 @@ public:
     double record_data(int dir_,double speed_,double freq, double t_r);
     void useParams1();
     void printParams();
+    void pos(double target_, double kp_, double ki_, double kd_, double angle_, double t_);
+    float compute(double target_, double kp_ , double ki_ , double kd_, double sensor_);
+    void reset_timer();
 
 private:
        Timer tr;
+       Timer t_pid;
        DigitalOut dir1;
        DigitalOut dir2;
        PwmOut pwm;
@@ -52,6 +56,9 @@ private:
        double rps;
        double freq;
        double ppr;
+       double angNow;
+       double lastAng;
+       double errAngle;
        double e;
        double laste;
        double eI;
@@ -59,6 +66,9 @@ private:
        double dt;
        double tim;
        double lastime;
+       double pid;
+       double pidSat;
+       double pid_out;
        double pidPwm;
        double pwmLebih;
        double lastPid;
